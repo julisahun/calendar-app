@@ -4,15 +4,11 @@ import { Pressable, Text } from 'react-native'
 
 const Button = ({ primary, secondary, text, callback, ...props }) => {
   if (!secondary) primary = true
-  const Styles = {
-    backgroundColor: primary ? styles.primary : secondary ? styles.secondary : 'white',
-    borderRadius: 5,
-    padding: 7,
-    ...(props.styles)
-  }
+  const color = primary ? styles.primary : styles.secondary
+  const classes = [props.class || '', 'rounded-xl', 'p-4'].join(' ')
   return (
-    <Pressable style={{ ...Styles }} onPress={callback}>
-      <Text>{text}</Text>
+    <Pressable className={classes} style={{ backgroundColor: color }} onPress={callback}>
+      <Text className='text-center'>{text}</Text>
     </Pressable>
   )
 }

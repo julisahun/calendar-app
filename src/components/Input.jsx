@@ -2,15 +2,11 @@ import React from 'react'
 import { TextInput } from 'react-native'
 
 const Input = (props) => {
-  const Styles = {
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 7,
-    ...props.styles
-  }
+  const classes = [props.classes || [], 'rounded-lg', 'border-2', 'p-3', 'm-2'].join(' ')
+
   return (
     <TextInput
-      style={{ ...Styles }}
+      className={classes}
       placeholder={props.placeHolder}
       value={props.value}
       onChangeText={props.onChange}

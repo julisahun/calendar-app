@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from '../styles/styles.js'
 import users from '../data/users.js'
 import { Text, View, FlatList, TouchableNativeFeedback } from 'react-native'
 
@@ -16,7 +15,7 @@ const Home = ({ navigation }) => {
             selectUser(item.id)
           }}
           >
-            <View style={styles.margin5}>
+            <View className='m-5'>
               <Text>{item.name}</Text>
               <Text>{item.id}</Text>
             </View>
