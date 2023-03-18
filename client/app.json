@@ -21,10 +21,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.juli.sahun.calendarapp",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9647607c-ee6e-47ee-9e55-feb092ebf0d7"
+      }
+    },
+    "owner": "juli.sahun"
   }
 }

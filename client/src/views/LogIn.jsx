@@ -1,13 +1,17 @@
 import React from 'react'
 import { View } from 'react-native'
+import axios from 'axios'
 import Button from '../components/Button.jsx'
 import Input from '../components/Input.jsx'
+
 const LogIn = ({ navigation }) => {
   const [name, onChangeName] = React.useState('')
   const [password, onChangePassword] = React.useState('')
+  console.log(name)
 
-  const logInAction = () => {
+  const logInAction = async () => {
     console.log('LogInAction')
+    await axios.get('http://192.168.1.88:3000/ping')
     if (validateUser(name, password)) {
       navigation.push('Home')
     }

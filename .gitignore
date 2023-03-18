@@ -9,6 +9,9 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+.env
+.env.local
+serviceAccountKey.jsonconsole.log(process.env.FIREBASE_DATABASE_URL)
 
 # macOS
 .DS_Store

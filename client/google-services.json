@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "635793991446",
+    "project_id": "calendar-app-quesito",
+    "storage_bucket": "calendar-app-quesito.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635793991446:android:26896a1c3ba64a1f379237",
+        "android_client_info": {
+          "package_name": "com.juli.sahun.calendarapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "635793991446-16sv3tkja1qqfj26h8qf6mglq9shlc1o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juli.sahun.calendarapp",
+            "certificate_hash": "8b6dad9b0c9464cfc2d4b70a463cf4443c6f736b"
+          }
+        },
+        {
+          "client_id": "635793991446-sr2c89q7a671mpkv0fggs1g0bbr63hb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.juli.sahun.calendarapp",
+            "certificate_hash": "fe68d0456a2e7c461390ab1fd3f63a9bd96a0056"
+          }
+        },
+        {
+          "client_id": "635793991446-ijchbskqgmk31s41mi46evhh3gis21bl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCm2oewKh8RujHpHSVPeZb9vGVILSwSOpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635793991446-ijchbskqgmk31s41mi46evhh3gis21bl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
