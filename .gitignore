@@ -12,6 +12,7 @@ web-build/
 .env
 .env.local
 serviceAccountKey.json
+.vscode
 
 # macOS
 .DS_Store

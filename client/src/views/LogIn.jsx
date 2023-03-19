@@ -7,12 +7,9 @@ import Input from '../components/Input.jsx'
 const LogIn = ({ navigation }) => {
   const [name, onChangeName] = React.useState('')
   const [password, onChangePassword] = React.useState('')
-  console.log(name)
 
   const logInAction = async () => {
-    console.log('LogInAction')
-    await axios.get('http://192.168.1.88:3000/ping')
-    if (validateUser(name, password)) {
+    if (await validateUser(name, password)) {
       navigation.push('Home')
     }
   }
@@ -27,8 +24,16 @@ const LogIn = ({ navigation }) => {
   )
 }
 
-const validateUser = (name, password) => {
-  return true
+const validateUser = async (name, password) => {
+  try {
+    await axios.post('http://192.168.1.88:3000/users/login', {
+      name,
+      password
+    })
+    return true
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export default LogIn

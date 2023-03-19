@@ -8,7 +8,6 @@ const Home = ({ navigation }) => {
     navigation.navigate('UserView', { id })
   }
   const [query, onChangeQuery] = React.useState('')
-  console.log(!query)
   const filterUsers = users.filter((user) => {
     return user.name.toLowerCase().includes(query.toLowerCase()) || !query
   })
