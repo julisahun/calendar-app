@@ -1,25 +1,16 @@
 import React from 'react'
 import Main from './src/navigation/Main.jsx'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { Alert } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import messaging from '@react-native-firebase/messaging'
 
 export default function App () {
   const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission()
-    const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL
-
-    if (enabled) {
-      console.log('Authorization status:', authStatus)
-    }
+    await messaging().requestPermission()
   }
   React.useEffect(() => {
     if (requestUserPermission()) {
-      messaging().getToken().then(token => console.log(token))
-    } else {
-      console.log('Permission rejected', authStatus)
+      messaging().getToken().then(token => AsyncStorage.setItem('token', token))
     }
 
     messaging()
@@ -44,7 +35,7 @@ export default function App () {
     })
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage))
+      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage))
     })
     return unsubscribe
   }, [])
