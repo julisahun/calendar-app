@@ -1,8 +1,9 @@
 const dotenv = require('dotenv')
 dotenv.config()
 const express = require('express')
-const db = require('./src/db/service.js')
+const { db, messagering } = require('./src/db/service.js')
 const userRoutes = require('./src/users/routes.js')
+require('./src/mqtt/service.js')
 const app = express()
 
 const bodyParser = require('body-parser')

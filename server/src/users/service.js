@@ -17,6 +17,14 @@ exports.logIn = async (name, password) => {
   throw new Error('User not found')
 }
 
+exports.validateToken = async token => {
+  const userId = await db.from('userTokens').select('userId').where({ token }).first().exec()
+  console.log(userId)
+  if (!userId) return { valid: false }
+  const user = await db.from('users').select('*').where({ id: userId }).first().exec()
+  return { valid: !!user, user }
+}
+
 exports.getAll = async () => {
   return await db.from('users').select('*').exec()
 }

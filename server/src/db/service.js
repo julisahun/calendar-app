@@ -97,4 +97,7 @@ class db {
   }
 }
 const firebase = admin.database()
-module.exports = new db()
+const messagering = admin.messaging()
+
+exports.messagering = messagering
+exports.db = new db()

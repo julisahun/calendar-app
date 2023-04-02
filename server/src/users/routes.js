@@ -12,6 +12,19 @@ router.post('/register', async (req, res) => {
   }
 })
 
+router.post('/validate', async (req, res) => {
+  const token = req.body.token
+  console.log(token)
+  if (token) {
+    const { valid, user } = await service.validateToken(token)
+    if (valid) {
+      res.send(user)
+      return 
+    }
+  }  
+  res.sendStatus(401)
+})
+
 router.post('/login', async (req, res) => {
   try {
     // const { name, password } = req.body

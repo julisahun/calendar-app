@@ -1,10 +1,8 @@
-import { StyleSheet } from 'react-native'
-
-import { Camera, CameraType } from 'expo-camera'
+import { StyleSheet, Image } from 'react-native'
+import { Camera } from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 import React, { useState, useEffect, useRef } from 'react'
-import View from '../components/View.jsx'
-import Button from '../components/Button'
+import { View, Button, Icon } from '../components/Components.jsx'
 
 export default function CustomCamera (props) {
   const [hasPermission, setHasPermission] = useState(null)
@@ -22,8 +20,11 @@ export default function CustomCamera (props) {
   }
 
   const takePicture = async () => {
-    const photo = await cameraRef.current.takePictureAsync()
+    console.log('take picture')
+    const { base64: photo } = await cameraRef.current.takePictureAsync({ base64: true, quality: 0 })
+    setImage('data:image/png;base64,' + photo)
   }
+  console.log(image)
 
   useEffect(() => {
     (async () => {
@@ -34,16 +35,23 @@ export default function CustomCamera (props) {
   }, [])
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type} flash={flash} ref={cameraRef} >
-        <View class="flex-1" />
-        <View class="flex flex-row justify-between items-center my-10 mx-5">
-          <Button class="rounded-xl w-1/4 text-white p-2" text={'back'} onClick={props.back}/>
-          <View class="w-1/3 items-center">
-            <Button custom class="rounded-full w-10 h-10 bg-white"onClick={takePicture}/>
+      {image &&
+
+        <Image source={{ uri: image }} style={{ flex: 1 }} />
+
+      }
+      {!image &&
+        <Camera style={styles.camera} type={type} flash={flash} ref={cameraRef} >
+          <View class="flex-1" />
+          <View class="flex flex-row justify-between items-center my-10 mx-5">
+            <Button class="rounded-xl w-1/4 text-white p-2" text={'back'} onClick={props.back}/>
+            <View class="w-1/3 items-center">
+              <Button custom class="rounded-full w-10 h-10 bg-white" onClick={takePicture}/>
+            </View>
+            <Button class="rounded-xl text-white p-2 w-1/4" text={'flip'} onClick={flipCamera}/>
           </View>
-          <Button class="rounded-xl text-white p-2 w-1/4" text={'flip'} onClick={flipCamera}/>
-        </View>
-      </Camera>
+        </Camera>
+      }
 
     </View>
   )

@@ -8,8 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const LogIn = ({ navigation }) => {
   const [name, onChangeName] = React.useState('')
   const [password, onChangePassword] = React.useState('')
-  const [deviceId, onDeviceIdReceived] = React.useState('')
-  AsyncStorage.getItem('token').then(token => onDeviceIdReceived(token))
+  const [deviceId, onChangeDeviceId] = React.useState('')
 
   const logInAction = async () => {
     if (await validateUser(name, password)) {
