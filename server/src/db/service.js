@@ -16,14 +16,6 @@ const {
   DATABASE_PORT,
 } = process.env
 
-console.log({
-  DATABASE_HOST,
-  DATABASE_NAME,
-  DATABASE_USER_NAME,
-  DATABASE_USER_PASSWORD,
-  DATABASE_PORT,
-})
-
 const client = new Client({
   user: DATABASE_USER_NAME,
   host: DATABASE_HOST,
@@ -35,12 +27,12 @@ const client = new Client({
   },
 })
 
-client.connect(function (err) {
-  if (err) {
-    throw err
-  }
-  console.log('Database connected!')
-})
+// client.connect(function (err) {
+//   if (err) {
+//     throw err
+//   }
+//   console.log('Database connected!')
+// })
 
 class db {
   constructor() {
