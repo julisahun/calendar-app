@@ -8,12 +8,20 @@ admin.initializeApp({
 
 const { Client } = require('pg')
 
+const {
+  DATABASE_HOST,
+  DATABASE_NAME,
+  DATABASE_USER_NAME,
+  DATABASE_USER_PASSWORD,
+  DATABASE_PORT,
+} = process.env
+
 const client = new Client({
-  user: 'juli',
-  host: 'dpg-cgkuoem4dad69r50simg-a.frankfurt-postgres.render.com',
-  database: 'db_4710',
-  password: 'fEuxEJYmwCS3zwtiQjAEWCxT796uvlS6',
-  port: 5432,
+  user: DATABASE_USER_NAME,
+  host: DATABASE_HOST,
+  database: DATABASE_NAME,
+  password: DATABASE_USER_PASSWORD,
+  port: DATABASE_PORT,
   ssl: {
     rejectUnauthorized: false,
   },
