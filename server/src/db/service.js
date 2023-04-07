@@ -3,101 +3,138 @@ const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DATABASE_URL
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+})
+
+const { Client } = require('pg')
+
+const client = new Client({
+  user: 'juli',
+  host: 'dpg-cgkuoem4dad69r50simg-a.frankfurt-postgres.render.com',
+  database: 'db_4710',
+  password: 'fEuxEJYmwCS3zwtiQjAEWCxT796uvlS6',
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+})
+
+client.connect(function (err) {
+  if (err) {
+    throw err
+  }
+  console.log('Database connected!')
 })
 
 class db {
-  request = {}
-  from = (table) => {
-    this.request.table = table
+  constructor() {
+    this.query = {
+      select: [],
+      from: '',
+      where: [],
+      orderBy: [],
+      limit: 0,
+      insert: [],
+    }
+  }
+
+  select(...args) {
+    this.query.select = args
     return this
   }
 
-  into = this.from
-
-  select = (...fields) => {
-    if (!fields.length) fields = ['*']
-    this.request.select = fields
+  from(table) {
+    this.query.from = table
     return this
   }
 
-  whereEq = (conditions) => {
-    if (!this.request.where) this.request.where = []
-    Object.entries(conditions).forEach(([field, value]) => {
-      this.request.where.push({ field, op: 'eq', value })
-    })
-    return this
-  }
-
-  where = this.whereEq
-
-  insert = (data) => {
-    this.request.insert = data
-    return this
-  }
-
-  update = (data) => {
-    this.request.update = data
-    return this
-  }
-
-  first = () => {
-    this.request.first = true
-    return this
-  }
-
-  exec = async () => {
-    console.log(this.request)
-    let returnArray = []
-    let table = firebase.ref(this.request.table)
-    let query = table
-    if (this.request.where) {
-      this.request.where.forEach((condition) => {
-        query = query.orderByChild(condition.field)
-        if (condition.op === 'eq') {
-          query = query.equalTo(condition.value)
-        }
+  where(condition) {
+    if (condition.length === 1 && typeof condition[0] === 'object') {
+      this.query.where.push(
+        Object.entries(condition[0]).map(([key, value]) => ({
+          key,
+          value,
+          op: '=',
+        }))
+      )
+    } else {
+      this.query.where.push({
+        key: condition[0],
+        value: condition[2],
+        op: condition[1],
       })
     }
-    if (this.request.select && this.request.select.length) {
-      const snapshot = await query.once('value')
-      snapshot.forEach((childSnapshot) => {
-        const data = childSnapshot.val()
-        if (this.request.select[0] === '*') returnArray.push(data)
-        else if (this.request.select.length === 1) {
-          returnArray.push(data[this.request.select[0]])
-        } else {
-          let returnObject = {}
-          this.request.select.forEach((field) => {
-            returnObject[field] = data[field]
+    return this
+  }
+
+  insert(values) {
+    this.query.insert.push(
+      ...Object.entries(values).map(([key, value]) => ({ key, value }))
+    )
+    return this
+  }
+
+  into(table) {
+    this.query.from = table
+    return this
+  }
+
+  first() {
+    this.query.limit = 1
+    return this
+  }
+
+  async exec() {
+    let text = ''
+    let values = []
+    console.log(this.query)
+    if (this.query.select.length > 0) {
+      text = `SELECT ${this.query.select.join(', ')} FROM ${
+        this.query.from
+      }`
+
+      if (this.query.where.length > 0) {
+        text += ' WHERE '
+        text += this.query.where.map((condition) => {
+          return condition
+            .map(({ key, value, op }) => {
+              values.push(value)
+              return `${key} ${op} $${values.length}`
+            })
+            .join(' AND ')
+        })
+      }
+      if (this.query.limit) {
+        text += ` LIMIT ${this.query.limit}`
+      }
+    } else if (this.query.insert.length > 0) {
+      text = `INSERT INTO ${this.query.from} (${this.query.insert
+        .map(({ key }) => key)
+        .join(', ')}) VALUES (`
+      text +=
+        this.query.insert
+          .map(({ value }, index) => {
+            values.push(value)
+            return `$${index + 1}`
           })
-          returnArray.push(returnObject)
-        }
-      })
+          .join(', ') + ')'
     }
-    if (this.request.insert) {
-      await query.push(this.request.insert)
-    }
-    if (this.request.update) {
-      const updates = {}
-      const snapshot = await query.once('value')
 
-      snapshot.forEach((childSnapshot) => {
-        const childKey = childSnapshot.key
-        const childData = childSnapshot.val()
-        updates[childKey] = {
-          ...childData,
-          ...this.request.update
-        }
-      })
-      table.update(updates)
+    let res = await client.query(text, values)
+    let rows = res.rows
+    if (this.query.select.length === 1 && this.query.select[0] !== '*')
+      rows = rows.map((row) => row[this.query.select[0]])
+    this.query = {
+      select: [],
+      from: '',
+      where: [],
+      orderBy: [],
+      limit: 0,
+      insert: [],
     }
-    const first = this.request.first
-    this.request = {}
-    return first ? returnArray[0] : returnArray
+    return this.query.limit === 1 ? rows[0] : rows
   }
 }
-const firebase = admin.database()
 const messagering = admin.messaging()
 
 exports.messagering = messagering
