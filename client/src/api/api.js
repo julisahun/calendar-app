@@ -1,15 +1,20 @@
 import axios from 'axios'
 import { BASE_URL } from '@env'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const get = (url, params) => {
-  return axios.get(BASE_URL + url, { params })
-}
+let token
+AsyncStorage.getItem('userToken').then((value) => {
+  token = value
+})
 
-const post = (url, data) => {
-  return axios.post('https://192.168.1.88:3000/users/validate', data)
-}
+const api = axios.create()
 
-export default {
-  get,
-  post
-}
+api.interceptors.request.use(async (config) => {
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  config.url = `${BASE_URL}${config.url}`
+  return config
+})
+
+export default api

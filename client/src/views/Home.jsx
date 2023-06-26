@@ -1,13 +1,19 @@
 import React from 'react'
-import users from '../data/users.js'
 import Input from '../components/Input.jsx'
 import Text from '../components/Text.jsx'
+import api from '../api/api.js'
 import { FlatList, TouchableNativeFeedback, View } from 'react-native'
 
 const Home = ({ navigation }) => {
   const selectUser = (user) => {
     navigation.navigate('UserView', user)
   }
+  const [users, setUsers] = React.useState([])
+  React.useEffect(() => {
+    api.get('/users').then((res) => {
+      setUsers(res.data)
+    })
+  }, [])
   const [query, onChangeQuery] = React.useState('')
   const filterUsers = users.filter((user) => {
     return user.name.toLowerCase().includes(query.toLowerCase()) || !query
@@ -15,9 +21,9 @@ const Home = ({ navigation }) => {
 
   return (
     <View>
-      <Input value={query} onChange={onChangeQuery} />
+      <Input value={filterUsers} onChange={onChangeQuery} />
       <FlatList
-        data={filterUsers}
+        data={users}
         renderItem={({ item }) =>
           <View key={item.id} className="mb-4">
             <TouchableNativeFeedback onPress={() => {

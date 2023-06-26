@@ -4,8 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import messaging from '@react-native-firebase/messaging'
 import { PermissionsAndroid } from 'react-native'
+require('./src/mqtt/service.js')
 
-export default function App () {
+export default function App() {
   const requestUserPermission = async () => {
     await Promise.race([
       messaging().requestPermission(),
@@ -18,16 +19,20 @@ export default function App () {
     if (requestUserPermission()) {
       messaging()
         .getToken()
-        .then((token) => { AsyncStorage.setItem('token', token); console.log(token) })
+        .then((token) => {
+          AsyncStorage.setItem('deviceId', token)
+        })
     }
-    messaging().getInitialNotification().then(async (remoteMessage) => {
-      if (remoteMessage) {
-        console.log(
-          'Notification caused app to open from quit state:',
-          remoteMessage.notification
-        )
-      }
-    })
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification
+          )
+        }
+      })
     messaging().onNotificationOpenedApp(async (remoteMessage) => {
       console.log(
         'Notification caused app to open from background state:',
@@ -40,7 +45,10 @@ export default function App () {
     })
 
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage))
+      console.log(
+        'A new FCM message arrived!',
+        JSON.stringify(remoteMessage)
+      )
     })
     return unsubscribe
   }, [])

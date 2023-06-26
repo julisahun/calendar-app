@@ -3,7 +3,7 @@ dotenv.config()
 const express = require('express')
 const { db, messagering } = require('./src/db/service.js')
 const userRoutes = require('./src/users/routes.js')
-require('./src/mqtt/service.js')
+const eventRoutes = require('./src/events/routes.js')
 const app = express()
 
 const bodyParser = require('body-parser')
@@ -21,14 +21,10 @@ app.listen(port, () => {
 })
 
 app.use('/users', userRoutes)
+app.use('/events', eventRoutes)
 
 app.get('/ping', async (req, res) => {
-  const name = await db
-    .from('users')
-    .select('nombre')
-    .where({ edad: 12 })
-    .first()
-    .exec()
+  const name = await db('users').first()
   console.log(name)
   res.send('pong')
 })

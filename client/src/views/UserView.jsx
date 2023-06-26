@@ -17,10 +17,11 @@ const UserView = ({ navigation, route }) => {
 
   React.useEffect(() => {
     const { id } = route.params
+    console.log(id)
     const asyncCall = async () => {
-      // api.get(`/users/${id}/events`).then(response => {
-      //   setEvents(response.data)
-      // })
+      api.get(`/events/${id}`).then(response => {
+        setEvents(response.data)
+      })
     }
     asyncCall()
   }, [])

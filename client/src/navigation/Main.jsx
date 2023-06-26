@@ -5,7 +5,6 @@ import UserView from '../views/UserView.jsx'
 import Camera from '../views/Camera.jsx'
 import ItemDetails from '../views/ItemDetails.jsx'
 import api from '../api/api.js'
-import axios from 'axios'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -22,7 +21,7 @@ const Main = () => {
       // })
       // console.log(user)
     } catch (error) {
-      console.log(error)
+      // no op
     }
   })
   return (

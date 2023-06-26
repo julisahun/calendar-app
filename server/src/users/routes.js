@@ -3,21 +3,18 @@ const router = require('express').Router()
 
 router.post('/register', async (req, res) => {
   try {
-    const { name, password } = req.body
-    await service.register(name, password)
+    const { name, password, deviceId } = req.body
+    await service.register(name, password, deviceId)
     res.sendStatus(200)
   } catch (err) {
-    console.log(err)
     res.sendStatus(400)
   }
 })
 
 router.post('/validate', async (req, res) => {
   const token = req.body.token
-  console.log(token)
   if (token) {
-    const { valid, user } =
-      await service.validateToken(token)
+    const { valid, user } = await service.validateToken(token)
     if (valid) {
       res.send(user)
       return
@@ -28,11 +25,10 @@ router.post('/validate', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { name, password } = req.body
-    await service.logIn(name, password)
+    const { name, password, deviceId } = req.body
+    await service.logIn(name, password, deviceId)
     res.sendStatus(200)
   } catch (err) {
-    console.log(err)
     res.sendStatus(400)
   }
 })
@@ -42,7 +38,6 @@ router.get('/', async (req, res) => {
     const users = await service.getAll()
     res.send(users)
   } catch (err) {
-    console.log(err)
     res.sendStatus(400)
   }
 })
